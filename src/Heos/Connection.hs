@@ -22,7 +22,8 @@ get :: (FromJSON t) => String -> Connection -> IO (Response t)
 get command connection = do
   putStrLn $ "sending command: " ++ command
   connectionPut connection $ BS.pack $ command ++ "\r\n"
-  json <- connectionGet connection maxBound
+  json <- connectionGetLine maxBound connection
+  putStrLn $ "received: " ++ show json
   let response = decode $ BSL.fromStrict json
   case response of
     Just x -> return x
