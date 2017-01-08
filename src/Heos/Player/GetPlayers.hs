@@ -3,6 +3,7 @@ module Heos.Player.GetPlayers (getPlayers, getPlayerByName) where
 
 import           Control.Monad
 import           Data.Aeson.TH
+import           Data.List
 import           Heos.Connection    (get)
 import           Heos.Response      (Response, payload)
 import           Network.Connection
@@ -24,11 +25,27 @@ $(deriveJSON defaultOptions ''Data)
 getPlayers :: Connection -> IO (Response [Data])
 getPlayers = get "heos://player/get_players"
 
-getPlayerByName :: String -> Connection -> IO Data
-getPlayerByName name = fmap (selectByName name) . getPlayers
+getPlayerByName :: String -> Connection -> IO (Maybe Data)
+getPlayerByName = getPlayerByField name
 
-selectByName :: String -> Response [Data] -> Data
-selectByName n = head . filter (\d -> n==name d) . getData
+getPlayerByPid :: Int -> Connection -> IO (Maybe Data)
+getPlayerByPid = getPlayerByField pid
+
+getPlayersByGid :: Int -> Connection -> IO [Data]
+getPlayersByGid = getPlayersByField gid . Just
+
+getPlayersByNetwork :: String -> Connection -> IO [Data]
+getPlayersByNetwork = getPlayersByField network
+
+getPlayersByField :: Eq a => (Data -> a) -> a -> Connection -> IO [Data]
+getPlayersByField f v = fmap filtered . getPlayers
+  where
+    filtered = filter (\d -> f d == v) . getData
+
+getPlayerByField :: Eq a => (Data -> a) -> a -> Connection -> IO (Maybe Data)
+getPlayerByField f v = fmap first . getPlayers
+  where
+    first = find (\d -> f d == v) . getData
 
 getData :: Response [Data] -> [Data]
 getData response = case payload response of
