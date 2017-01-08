@@ -18,8 +18,8 @@ connect host port = do
                   , connectionUseSocks  = Nothing
                   }
 
-get :: Connection -> String -> IO (Maybe Response)
-get connection message = do
+get :: String -> Connection -> IO (Maybe Response)
+get message connection = do
   connectionPut connection $ BS.pack $ message ++ "\r\n"
   response <- connectionGet connection maxBound
   return $ decode $ BSL.fromStrict response
