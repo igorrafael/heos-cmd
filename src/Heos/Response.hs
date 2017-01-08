@@ -20,6 +20,6 @@ data Header = Header
 $(deriveJSON defaultOptions ''Response)
 $(deriveJSON defaultOptions ''Header)
 
-responseError :: String -> Response t
-responseError message = Response header Nothing
-  where header = Header message "error" message
+responseError :: String -> String -> Response t
+responseError command message = Response header Nothing
+  where header = Header command "error" message

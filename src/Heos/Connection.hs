@@ -19,11 +19,11 @@ connect host port = do
                   }
 
 get :: (FromJSON t) => String -> Connection -> IO (Response t)
-get message connection = do
-  putStrLn $ "sending message: " ++ message
-  connectionPut connection $ BS.pack $ message ++ "\r\n"
+get command connection = do
+  putStrLn $ "sending command: " ++ command
+  connectionPut connection $ BS.pack $ command ++ "\r\n"
   json <- connectionGet connection maxBound
   let response = decode $ BSL.fromStrict json
   case response of
     Just x -> return x
-    _      -> return $ responseError "decode failure"
+    _      -> return $ responseError command "decode failure"
