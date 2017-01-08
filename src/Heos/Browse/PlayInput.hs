@@ -4,12 +4,14 @@ module Heos.Browse.PlayInput
 
 import           Data.Aeson.Types   (Value)
 import           Heos.Connection    (get)
+import           Heos.Player.Player (Player (pid))
 import           Heos.Response      (Response)
 import           Network.Connection
 
 -- HACK the response should actually have no type
 -- but also needs to implement FromJSON
-playInput :: Connection -> IO (Response Value)
-playInput = get $ "heos://browse/play_input?" ++ args
+playInput :: Player -> String -> Connection -> IO (Response Value)
+playInput player input = get $ "heos://browse/play_input?" ++ args
   where
-    args = "" --TODO get args
+    args = "pid=" ++ pid' ++ "&" ++ "input=inputs/" ++ input
+    pid' = show $ pid player
