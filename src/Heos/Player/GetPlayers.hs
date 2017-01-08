@@ -1,6 +1,7 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Heos.Player.GetPlayers
-( getPlayerByName
+( getPlayers
+, getPlayerByName
 , getPlayerByPid
 , getPlayersByGid
 , getPlayersByNetwork
@@ -27,30 +28,38 @@ data Data = Data
 
 $(deriveJSON defaultOptions ''Data)
 
+--IO functions
 getPlayers :: Connection -> IO (Response [Data])
 getPlayers = get "heos://player/get_players"
 
 getPlayerByName :: String -> Connection -> IO (Maybe Data)
-getPlayerByName = getPlayerByField name
-
+getPlayerByName v = fmap (playerByName v) . getPlayers
 getPlayerByPid :: Int -> Connection -> IO (Maybe Data)
-getPlayerByPid = getPlayerByField pid
-
+getPlayerByPid v = fmap (playerByPid v) . getPlayers
 getPlayersByGid :: Maybe Int -> Connection -> IO [Data]
-getPlayersByGid = getPlayersByField gid
-
+getPlayersByGid v = fmap (playersByGid v) . getPlayers
 getPlayersByNetwork :: String -> Connection -> IO [Data]
-getPlayersByNetwork = getPlayersByField network
+getPlayersByNetwork v = fmap (playersByNetwork v) . getPlayers
 
-getPlayersByField :: Eq a => (Data -> a) -> a -> Connection -> IO [Data]
-getPlayersByField field value = fmap filtered . getPlayers
-  where
-    filtered = filter ((== value) . field) . getData
 
-getPlayerByField :: Eq a => (Data -> a) -> a -> Connection -> IO (Maybe Data)
-getPlayerByField field value = fmap first . getPlayers
-  where
-    first = find ((== value) . field) . getData
+--Pure functions
+playerByName :: String -> Response [Data] -> Maybe Data
+playerByName = playerByField name
+
+playerByPid :: Int -> Response [Data] -> Maybe Data
+playerByPid = playerByField pid
+
+playersByGid :: Maybe Int -> Response [Data] -> [Data]
+playersByGid = playersByField gid
+
+playersByNetwork :: String -> Response [Data] -> [Data]
+playersByNetwork = playersByField network
+
+playersByField :: Eq a => (Data -> a) -> a -> Response [Data] -> [Data]
+playersByField field value = filter ((== value) . field) . getData
+
+playerByField :: Eq a => (Data -> a) -> a -> Response [Data] -> Maybe Data
+playerByField field value = find ((== value) . field) . getData
 
 getData :: Response [Data] -> [Data]
 getData response = case payload response of
