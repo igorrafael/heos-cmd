@@ -19,6 +19,6 @@ executable heos-cmd
   default-language:    Haskell2010
   build-depends:       base >= 4.7 && < 5
                       ,resourcet
-                      ,conduit-extra
-                      ,conduit
+                      ,bytestring
+                      ,connection
                       ,network
