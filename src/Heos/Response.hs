@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric   #-}
 {-# LANGUAGE TemplateHaskell #-}
-module Heos.Response (Response, responseError) where
+module Heos.Response (Response, payload, responseError) where
 
 import           Data.Aeson
 import           Data.Aeson.TH
