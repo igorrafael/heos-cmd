@@ -18,8 +18,11 @@ connect host port = do
                   , connectionUseSocks  = Nothing
                   }
 
-get :: String -> Connection -> IO (Maybe Response)
+get :: (FromJSON t) => String -> Connection -> IO (Response t)
 get message connection = do
   connectionPut connection $ BS.pack $ message ++ "\r\n"
-  response <- connectionGet connection maxBound
-  return $ decode $ BSL.fromStrict response
+  json <- connectionGet connection maxBound
+  let response = decode $ BSL.fromStrict json
+  case response of
+    Just x -> return x
+    _      -> return $ responseError "decode failure"
