@@ -9,7 +9,6 @@ port _ = 1255
 main :: IO ()
 main = do
     args <- getArgs
-    putStrLn "Hi"
     connection <- connect (host args) (port args)
     response <- get connection "heos://player/get_players"
-    putStrLn response
+    print $ show response
