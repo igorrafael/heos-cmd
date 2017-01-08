@@ -21,5 +21,6 @@ executable heos-cmd
                       ,aeson
                       ,bytestring
                       ,connection
+                      ,hflags > 0.4
                       ,network
                       ,resourcet

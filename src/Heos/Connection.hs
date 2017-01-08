@@ -8,8 +8,8 @@ import           Heos.Response
 import           Network.Connection
 import           System.IO
 
-connect :: String -> Int -> IO Connection
-connect host port = do
+connect :: String -> IO Connection
+connect host = do
     ctx <- initConnectionContext
     connectTo ctx ConnectionParams
                   { connectionHostname  = host
