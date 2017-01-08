@@ -8,7 +8,7 @@ import           Data.Aeson.Types
 
 data Response t = Response
     { heos    :: Header
-    , payload :: [t] --TODO support non array payloads
+    , payload :: Maybe t
     } deriving (Show, Eq)
 
 data Header = Header
@@ -21,5 +21,5 @@ $(deriveJSON defaultOptions ''Response)
 $(deriveJSON defaultOptions ''Header)
 
 responseError :: String -> Response t
-responseError message = Response header []
+responseError message = Response header Nothing
   where header = Header message "error" message

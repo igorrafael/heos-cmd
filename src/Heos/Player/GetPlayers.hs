@@ -20,5 +20,5 @@ data Payload = Payload
 
 $(deriveJSON defaultOptions ''Payload)
 
-getPlayers :: Connection -> IO (Response Payload)
+getPlayers :: Connection -> IO (Response [Payload])
 getPlayers = get "heos://player/get_players"
