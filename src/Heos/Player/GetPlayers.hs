@@ -38,14 +38,14 @@ getPlayersByNetwork :: String -> Connection -> IO [Data]
 getPlayersByNetwork = getPlayersByField network
 
 getPlayersByField :: Eq a => (Data -> a) -> a -> Connection -> IO [Data]
-getPlayersByField f v = fmap filtered . getPlayers
+getPlayersByField field value = fmap filtered . getPlayers
   where
-    filtered = filter (\d -> f d == v) . getData
+    filtered = filter ((== value) . field) . getData
 
 getPlayerByField :: Eq a => (Data -> a) -> a -> Connection -> IO (Maybe Data)
-getPlayerByField f v = fmap first . getPlayers
+getPlayerByField field value = fmap first . getPlayers
   where
-    first = find (\d -> f d == v) . getData
+    first = find ((== value) . field) . getData
 
 getData :: Response [Data] -> [Data]
 getData response = case payload response of
