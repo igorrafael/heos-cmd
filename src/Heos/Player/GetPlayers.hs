@@ -1,5 +1,10 @@
 {-# LANGUAGE TemplateHaskell #-}
-module Heos.Player.GetPlayers (getPlayers, getPlayerByName) where
+module Heos.Player.GetPlayers
+( getPlayerByName
+, getPlayerByPid
+, getPlayersByGid
+, getPlayersByNetwork
+) where
 
 import           Control.Monad
 import           Data.Aeson.TH
@@ -31,8 +36,8 @@ getPlayerByName = getPlayerByField name
 getPlayerByPid :: Int -> Connection -> IO (Maybe Data)
 getPlayerByPid = getPlayerByField pid
 
-getPlayersByGid :: Int -> Connection -> IO [Data]
-getPlayersByGid = getPlayersByField gid . Just
+getPlayersByGid :: Maybe Int -> Connection -> IO [Data]
+getPlayersByGid = getPlayersByField gid
 
 getPlayersByNetwork :: String -> Connection -> IO [Data]
 getPlayersByNetwork = getPlayersByField network

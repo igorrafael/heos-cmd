@@ -12,5 +12,6 @@ main = do
     args <- getArgs
     connection <- connect (host args) (port args)
     --response <- getPlayers connection
-    response <- getPlayerByName "HEOS 1" connection
+    --response <- getPlayerByName "HEOS 1" connection
+    response <- getPlayersByGid Nothing connection
     print $ show response
