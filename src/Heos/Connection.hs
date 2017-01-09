@@ -1,22 +1,25 @@
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 module Heos.Connection (connect, get) where
 
 import           Data.Aeson
 import qualified Data.ByteString.Char8      as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
 import           Heos.Response
+import           HFlags
 import           Network.Connection
 import           System.IO
 
-connect :: String -> IO Connection
-connect host = do
-    ctx <- initConnectionContext
-    connectTo ctx ConnectionParams
-                  { connectionHostname  = host
-                  , connectionPort      = 1255
-                  , connectionUseSecure = Nothing
-                  , connectionUseSocks  = Nothing
-                  }
+defineFlag "h:host" "192.168.0.19" "IP of any HEOS device in the network."
+
+connect :: IO Connection
+connect = do
+  ctx <- initConnectionContext
+  connectTo ctx ConnectionParams
+                { connectionHostname  = flags_host --TODO autodiscover
+                , connectionPort      = 1255
+                , connectionUseSecure = Nothing
+                , connectionUseSocks  = Nothing
+                }
 
 get :: (FromJSON t) => String -> Connection -> IO (Response t)
 get command connection = do
