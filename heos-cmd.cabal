@@ -23,4 +23,3 @@ executable heos-cmd
                       ,connection
                       ,hflags > 0.4
                       ,network
-                      ,resourcet
