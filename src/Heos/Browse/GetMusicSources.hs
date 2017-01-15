@@ -1,6 +1,6 @@
 {-# LANGUAGE TemplateHaskell #-}
 module Heos.Browse.GetMusicSources
-( getMusicSources
+( --getMusicSources
 ) where
 
 import           Data.Aeson.TH
@@ -20,5 +20,6 @@ data Source = Source
 
 $(deriveJSON defaultOptions ''Source)
 
-getMusicSources :: Connection -> IO (Response [Source])
-getMusicSources = get "heos://browse/get_music_sources"
+--TODO
+--getMusicSources :: Connection -> IO (Response [Source])
+--getMusicSources = get "heos://browse/get_music_sources"

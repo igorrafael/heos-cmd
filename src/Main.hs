@@ -3,7 +3,7 @@ module Main where
 
 import           Heos.Browse.GetMusicSources
 import           Heos.Browse.PlayInput
-import           Heos.Connection             (connect)
+import           Heos.Connection             (connect, get)
 import           Heos.Player.GetPlayers
 import           Heos.Response
 import           HFlags
@@ -20,11 +20,11 @@ main :: IO ()
 main = do
   _ <- $initHFlags "HEOS simplified command line interface. Uses the telnet CLI provided by Denon."
   connection <- connect
-  response <- getPlayerByName flags_name connection
+  response <- getPlayerByName flags_name (get connection)
   case flags_play_input of
     "" -> putStrLn "no source specified"
     _ -> do
       inputChange <- case response of
-        Just p -> playInput p flags_play_input connection
+        Just p -> playInput p flags_play_input (get connection)
         _      -> return $ responseError "" $ "player \"" ++ flags_name ++ "\" not found"
       return ()

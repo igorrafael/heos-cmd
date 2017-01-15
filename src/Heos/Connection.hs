@@ -4,6 +4,7 @@ module Heos.Connection (connect, get) where
 import           Data.Aeson
 import qualified Data.ByteString.Char8      as BS
 import qualified Data.ByteString.Lazy.Char8 as BSL
+import           Heos.Request               (Request (..))
 import           Heos.Response
 import           HFlags
 import           Network.Connection
@@ -21,8 +22,9 @@ connect = do
                 , connectionUseSocks  = Nothing
                 }
 
-get :: (FromJSON t) => String -> Connection -> IO (Response t)
-get command connection = do
+get :: (FromJSON t) => Connection -> Request -> IO (Response t)
+get connection request = do
+  let command = show request
   putStrLn $ "sending command: " ++ command
   connectionPut connection $ BS.pack $ command ++ "\r\n"
   json <- connectionGetLine maxBound connection

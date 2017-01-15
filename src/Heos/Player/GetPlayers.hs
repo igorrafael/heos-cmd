@@ -9,20 +9,21 @@ module Heos.Player.GetPlayers
 import           Data.List
 import           Heos.Connection    (get)
 import           Heos.Player.Player (Player (..))
+import           Heos.Request       (Request (..))
 import           Heos.Response      (Response, payload)
 import           Network.Connection
 
 --IO functions
-getPlayers :: Connection -> IO (Response [Player])
-getPlayers = get "heos://player/get_players"
+getPlayers :: (Request -> t) -> t
+getPlayers f = f $ Request "heos://player/get_players" []
 
-getPlayerByName :: String -> Connection -> IO (Maybe Player)
+getPlayerByName :: String -> (Request -> IO (Response [Player])) -> IO (Maybe Player)
 getPlayerByName v = fmap (playerByName v) . getPlayers
-getPlayerByPid :: Int -> Connection -> IO (Maybe Player)
+getPlayerByPid :: Int -> (Request -> IO (Response [Player])) -> IO (Maybe Player)
 getPlayerByPid v = fmap (playerByPid v) . getPlayers
-getPlayersByGid :: Maybe Int -> Connection -> IO [Player]
+getPlayersByGid :: Maybe Int -> (Request -> IO (Response [Player])) -> IO [Player]
 getPlayersByGid v = fmap (playersByGid v) . getPlayers
-getPlayersByNetwork :: String -> Connection -> IO [Player]
+getPlayersByNetwork :: String -> (Request -> IO (Response [Player])) -> IO [Player]
 getPlayersByNetwork v = fmap (playersByNetwork v) . getPlayers
 
 
