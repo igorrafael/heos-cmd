@@ -9,13 +9,13 @@ import           HFlags
 import           Network.Connection
 import           System.IO
 
-defineFlag "h:host" "192.168.0.19" "IP of any HEOS device in the network."
+defineFlag "d:device" "192.168.0.19" "IP of any HEOS device in the network."
 
 connect :: IO Connection
 connect = do
   ctx <- initConnectionContext
   connectTo ctx ConnectionParams
-                { connectionHostname  = flags_host --TODO autodiscover
+                { connectionHostname  = flags_device --TODO autodiscover
                 , connectionPort      = 1255
                 , connectionUseSecure = Nothing
                 , connectionUseSocks  = Nothing
@@ -27,7 +27,10 @@ get command connection = do
   connectionPut connection $ BS.pack $ command ++ "\r\n"
   json <- connectionGetLine maxBound connection
   putStrLn $ "received: " ++ show json
+
   let response = decode $ BSL.fromStrict json
+  --TODO sleep if response.message=="command under process"
+
   case response of
     Just x -> return x
     _      -> return $ responseError command "decode failure"
