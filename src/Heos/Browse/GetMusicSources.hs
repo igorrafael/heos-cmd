@@ -5,7 +5,6 @@ module Heos.Browse.GetMusicSources
 
 import           Data.Aeson.TH
 import           Data.Aeson.Types   (Value)
-import           Heos.Connection    (get)
 import           Heos.Player.Player (Player (pid))
 import           Heos.Response      (Response)
 import           Network.Connection

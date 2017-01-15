@@ -1,5 +1,5 @@
 {-# LANGUAGE TemplateHaskell #-}
-module Heos.Connection (connect, get) where
+module Heos.Connection (connect, sendRequest) where
 
 import           Data.Aeson
 import qualified Data.ByteString.Char8      as BS
@@ -22,8 +22,8 @@ connect = do
                 , connectionUseSocks  = Nothing
                 }
 
-get :: (FromJSON t) => Connection -> Request -> IO (Response t)
-get connection request = do
+sendRequest :: (FromJSON t) => Connection -> Request -> IO (Response t)
+sendRequest connection request = do
   let command = show request
   putStrLn $ "sending command: " ++ command
   connectionPut connection $ BS.pack $ command ++ "\r\n"
