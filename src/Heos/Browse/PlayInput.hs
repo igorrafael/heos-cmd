@@ -7,7 +7,7 @@ import           Heos.Request       (Parameter (..), Request (..))
 import           Heos.Response      (Response)
 
 playInput :: Player -> String -> Request
-playInput player input = Request "heos://browse/play_input?" args
+playInput player input = Request "heos://browse/play_input" args
   where
     args =
       [ Parameter "pid" (show $ pid player)

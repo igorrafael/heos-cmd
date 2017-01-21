@@ -4,7 +4,7 @@ data Request = Request String [Parameter]
 
 instance Show Request where
   show (Request url [])     = url
-  show (Request url params) = url ++ "?" ++ foldl1 (++) (map show params)
+  show (Request url params) = url ++ "?" ++ foldl1 (\a b -> a++"&"++b) (map show params)
 
 data Parameter = Parameter String String
 
