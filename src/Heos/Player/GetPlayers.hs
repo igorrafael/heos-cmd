@@ -14,8 +14,14 @@ import           Heos.Response      (Response, payload)
 playerRequest :: Request
 playerRequest = Request "heos://player/get_players" []
 
+defaultPlayer :: Response [Player] -> Maybe Player
+defaultPlayer response = do
+  players <- payload response
+  return $ head players
+
 playerByName :: String -> Response [Player] -> Maybe Player
-playerByName = playerByField name
+playerByName "" = defaultPlayer
+playerByName n  = playerByField name n
 
 playerByPid :: Int -> Response [Player] -> Maybe Player
 playerByPid = playerByField pid
